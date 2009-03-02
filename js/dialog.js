@@ -14,27 +14,31 @@ var SyntaxHLDialog = {
 		}
 		
 		if(f.syntaxhl_nogutter.checked) {
-			options += ':nogutter';
+			options += 'gutter: false; ';
 		}
-		if(f.syntaxhl_nocontrols.checked) {
-			options += ':nocontrols';
+		if(f.syntaxhl_light.checked) {
+			options += 'light: true; ';
 		}
 		if(f.syntaxhl_collapse.checked) {
-			options += ':collapse';
+			options += 'collapse: true; ';
 		}
-		if(f.syntaxhl_showcolumns.checked) {
-			options += ':showcolumns';
+		if(f.syntaxhl_fontsize.value != '') {
+			var fontsize=parseInt(f.syntaxhl_fontsize.value);
+			options += 'fontsize: ' + fontsize + '; ';
 		}
 		
 		if(f.syntaxhl_firstline.value != '') {
 			var linenumber = parseInt(f.syntaxhl_firstline.value);
-			options += ':firstline[' + linenumber + ']';
+			options += 'first-line: ' + linenumber + '; ';
+		}
+		if(f.syntaxhl_highlight.value != '') {
+			options += 'highlight: [' + f.syntaxhl_highlight.value + ']; ';
 		}
 		
-		textarea_output = '<textarea name="code" ';
-		textarea_output += 'class="' + f.syntaxhl_language.value + options + '" cols="50" rows="15">';
+		textarea_output = '<pre class="brush: ';
+		textarea_output += f.syntaxhl_language.value + ';' + options + '">';
 		textarea_output +=  f.syntaxhl_code.value;
-		textarea_output += '</textarea> '; /* note space at the end, had a bug it was inserting twice? */
+		textarea_output += '</pre> '; /* note space at the end, had a bug it was inserting twice? */
 		tinyMCEPopup.editor.execCommand('mceInsertContent', false, textarea_output);
 		tinyMCEPopup.close();
 	}

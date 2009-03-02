@@ -4,8 +4,9 @@ tinyMCE.addI18n('en.syntaxhl_dlg',{
 	paste : 'Paste Code',
 	choose_lang : 'Choose Language',
 	nogutter : 'No Gutter',
-	nocontrols : 'No Controls',
+	light : 'Light',
 	collapse : 'Collapse',
-	showcolumns : 'Show Columns',
-	first_line : 'First line (default blank)'
+	fontsize : 'Font size',
+	first_line : 'First line',
+	highlight ： 'Highlight'
 });

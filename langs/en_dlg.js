@@ -8,5 +8,5 @@ tinyMCE.addI18n('en.syntaxhl_dlg',{
 	collapse : 'Collapse',
 	fontsize : 'Font size',
 	first_line : 'First line',
-	highlight ： 'Highlight'
+	highlight : 'Highlight'
 });

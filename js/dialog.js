@@ -34,6 +34,12 @@ var SyntaxHLDialog = {
     if(f.syntaxhl_highlight.value != '') {
       options += 'highlight: [' + f.syntaxhl_highlight.value + ']; ';
     }
+    if(f.syntaxhl_html_script.checked) {
+      options += 'html-script: true; ';
+    }
+    if(f.syntaxhl_hide_toolbar.checked) {
+      options += 'toolbar: false; ';
+    }
 
     textarea_output = '<pre class="brush: ';
     textarea_output += f.syntaxhl_language.value + ';' + options + '">';

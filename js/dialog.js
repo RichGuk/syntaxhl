@@ -2,13 +2,17 @@ tinyMCEPopup.requireLangPack();
 
 var SyntaxHLDialog = {
   init : function() {
+    // get arguments passed from plugin to window.
     var editor_content = tinyMCEPopup.getWindowArg('editor_content');
     var editor_options = tinyMCEPopup.getWindowArg('editor_options');
     
+    // check to see if any content was passed to window
     if(editor_content != undefined) {
+      // select form and place snippet code into editor window
       var f = document.forms[0];
       tinyMCEPopup.editor.dom.setHTML(f.syntaxhl_code, editor_content);
 
+      // check for each option and update form elements accordingly
       if(editor_options['brush']) {
         for(var i = 0; i < f.syntaxhl_language.options.length; i++) {
           if(f.syntaxhl_language.options[i].value == editor_options['brush']) {
@@ -53,6 +57,7 @@ var SyntaxHLDialog = {
       return false;
     }
 
+    // get replacement argument to determine return type
     replace_element = tinyMCEPopup.getWindowArg('replace_content');
 
     if(f.syntaxhl_nogutter.checked) {
@@ -68,7 +73,6 @@ var SyntaxHLDialog = {
       var fontsize=parseInt(f.syntaxhl_fontsize.value);
       options += 'fontsize: ' + fontsize + '; ';
     }
-
     if(f.syntaxhl_firstline.value != '') {
       var linenumber = parseInt(f.syntaxhl_firstline.value);
       options += 'first-line: ' + linenumber + '; ';
@@ -87,6 +91,8 @@ var SyntaxHLDialog = {
     textarea_output += f.syntaxhl_language.value + '; ' + options + '">';
     textarea_output +=  tinyMCEPopup.editor.dom.encode(f.syntaxhl_code.value);
     textarea_output += '</pre> '; /* note space at the end, had a bug it was inserting twice? */
+    
+    // check for replace_element option value and return output accordingly
     if(replace_element == false) {
       tinyMCEPopup.editor.execCommand('mceInsertContent', false, textarea_output);
     } else {

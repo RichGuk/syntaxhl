@@ -28,7 +28,7 @@
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL
-					replace_element : false
+					replace_content : false
 				});
 			});
 
@@ -48,16 +48,17 @@
 			if(ed.plugins.contextmenu != undefined)
 			{
 				ed.plugins.contextmenu.onContextMenu.add(function(sender, menu){
-					// check currently selected node
+					// check currently selected node for syntaxhl 'brush:' parameter
 					if(isBrush()) {
 						// define sub menu
 						var sub_menu = menu.add({
-							title : 'Edit Snippet',
+							title : 'SyntaxHL - Edit',
 							icon : '/img/highlight.gif',
 							onclick : function() { 
 								// get current node and select it for replacement
 								var currentNode = ed.selection.getNode();
-								ed.selection.select(currentNode, currentNode.localName);
+								// select entire snippted and limit to element type.
+								ed.selection.select(currentNode, currentNode.nodeName); 
 								ed.windowManager.open({
 									file : url + '/dialog.htm',
 									width : 450 + parseInt(ed.getLang('syntaxhl.delta_width', 0)),
@@ -68,6 +69,26 @@
 									replace_content : true,
 									editor_content : currentNode.innerHTML,
 									editor_options : getParameters(currentNode.className)
+								});
+
+							}
+						});
+					}
+					else // selection is not a syntaxhl snippet so create a new one
+					{
+						// create new contxt menu to create new snytaxHL element
+						var sub_menu = menu.add({
+							title : 'SyntaxHL - New',
+							icon : '/img/highlight.gif',
+							onclick : function() {
+								ed.windowManager.open({
+									file : url + '/dialog.htm',
+									width : 450 + parseInt(ed.getLang('syntaxhl.delta_width', 0)),
+									height : 400 + parseInt(ed.getLang('syntaxhl.delta_height', 0)),
+									inline : 1
+								}, {
+									plugin_url : url, // Plugin absolute URL
+									replace_content : false,
 								});
 
 							}
@@ -124,12 +145,12 @@
 	}
 
 	/**
-	 * Check the currently selected node to ensure it is a valid syntaxHighlighter 
-	 * brush.
+	 * Parses Syntax Highlighters parameters within the class attribute and
+	 * returns them in an associative array.
 	 *
 	 * @param params string or Syntax Highlighter parameters to parse
 	 *
-	 * @return boolean true if node is valid brush
+	 * @return array
 	 */
 	function getParameters(params) {
 		var parsedItems = params.replace(/ /g, '').replace(/;([^;]*)$/, '').split(';');

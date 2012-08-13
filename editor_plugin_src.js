@@ -27,7 +27,8 @@
 					height : 400 + parseInt(ed.getLang('syntaxhl.delta_height', 0)),
 					inline : 1
 				}, {
-					plugin_url : url // Plugin absolute URL
+					plugin_url : url, // Plugin absolute URL
+					replace_content : false
 				});
 			});
 
@@ -42,6 +43,59 @@
 			ed.onNodeChange.add(function(ed, cm, n) {
 				cm.setActive('syntaxhl', n.nodeName == 'IMG');
 			});
+
+			// add edit snipped option to context menu
+			if(ed.plugins.contextmenu != undefined)
+			{
+				ed.plugins.contextmenu.onContextMenu.add(function(sender, menu){
+					// check currently selected node for syntaxhl 'brush:' parameter
+					if(isBrush()) {
+						// define sub menu
+						var sub_menu = menu.add({
+							title : 'SyntaxHL - Edit',
+							icon : '/img/highlight.gif',
+							onclick : function() { 
+								// get current node and select it for replacement
+								var currentNode = ed.selection.getNode();
+								// select entire snippted and limit to element type.
+								ed.selection.select(currentNode, currentNode.nodeName); 
+								ed.windowManager.open({
+									file : url + '/dialog.htm',
+									width : 450 + parseInt(ed.getLang('syntaxhl.delta_width', 0)),
+									height : 400 + parseInt(ed.getLang('syntaxhl.delta_height', 0)),
+									inline : 1
+								}, {
+									plugin_url : url, // Plugin absolute URL
+									replace_content : true,
+									editor_content : currentNode.innerHTML,
+									editor_options : getParameters(currentNode.className)
+								});
+
+							}
+						});
+					}
+					else // selection is not a syntaxhl snippet so create a new one
+					{
+						// create new contxt menu to create new snytaxHL element
+						var sub_menu = menu.add({
+							title : 'SyntaxHL - New',
+							icon : '/img/highlight.gif',
+							onclick : function() {
+								ed.windowManager.open({
+									file : url + '/dialog.htm',
+									width : 450 + parseInt(ed.getLang('syntaxhl.delta_width', 0)),
+									height : 400 + parseInt(ed.getLang('syntaxhl.delta_height', 0)),
+									inline : 1
+								}, {
+									plugin_url : url, // Plugin absolute URL
+									replace_content : false,
+								});
+
+							}
+						});
+					}
+				});
+			}
 		},
 
 		/**
@@ -74,6 +128,40 @@
 			};
 		}
 	});
+
+	/**
+	 * Check the currently selected node to ensure it is a valid syntaxHighlighter 
+	 * brush.
+	 *
+	 * @return boolean true if node is valid brush
+	 */
+	function isBrush() {
+		var node = tinyMCE.activeEditor.selection.getNode();
+		if(node.nodeName != null && node.nodeName == 'PRE' && node.className.indexOf('brush:') != -1)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Parses Syntax Highlighters parameters within the class attribute and
+	 * returns them in an associative array.
+	 *
+	 * @param params string or Syntax Highlighter parameters to parse
+	 *
+	 * @return array
+	 */
+	function getParameters(params) {
+		var parsedItems = params.replace(/ /g, '').replace(/;([^;]*)$/, '').split(';');
+		var paramArray = new Array();
+		for(var i = 0; i < parsedItems.length; i++)
+		{
+			var option = parsedItems[i].split(':');
+			paramArray[option[0]] = option[1];
+		}
+		return paramArray;
+	}
 
 	// Register plugin
 	tinymce.PluginManager.add('syntaxhl', tinymce.plugins.SyntaxHL);

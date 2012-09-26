@@ -88,7 +88,7 @@
 									inline : 1
 								}, {
 									plugin_url : url, // Plugin absolute URL
-									replace_content : false,
+									replace_content : false
 								});
 
 							}

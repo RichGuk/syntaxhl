@@ -1,3 +1,6 @@
+NOTE: I'm no longer maintaining this anymore, if someone wishes to take over then please contact me.
+
+
 SyntaxHL is a plugin for the Tinymce (http://tinymce.moxiecode.com/) javascript WYSIWYG editor allowing you to insert highlighted code into the editor. The syntax highlighting is done using Syntax Highligher (http://code.google.com/p/syntaxhighlighter/) and the plugin simply produces the right syntax for this.
 
 == Installation
